@@ -4,9 +4,9 @@ LDFLAGS=-lpigpiod_if2 -lpthread
 
 .PHONE: all clean
 
-all: build
+all: demo
 
-build: pin_ctrl.c
+demo: pin_ctrl.c demo_pin_ctrl.c
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 clean:

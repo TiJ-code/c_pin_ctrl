@@ -60,7 +60,11 @@ PinCtrlResult_t pc_turn_pin(PinCtrl_t *ctrl, int pin, PinCtrlState_t state) {
 	
 	pc_set_mode(ctrl, pin, PC_MODE_OUT);
 
-	int result = gpio_write(ctrl->pi_handle, pin, state);
+	int actualState = state == PC_STATE_ON
+		? PI_LOW
+		: PI_HIGH;
+
+	int result = gpio_write(ctrl->pi_handle, pin, actualState);
 	return result == 0 ? PC_OK : PC_ERROR;
 }
 
@@ -114,12 +118,6 @@ const char *pc_pin_to_str(PinCtrl_t *ctrl, int pin) {
 
 PinCtrlResult_t pc_init(void (*log)(char *fmt, ...), PinCtrl_t *out) {
 	if (!out)
-		return PC_ERROR;
-
-	if (out->pi_handle >= 0)
-		return PC_ERROR;
-
-	if (out->log)
 		return PC_ERROR;
 
 	int pi_handle = pigpio_start(NULL, NULL);
